@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CashFlow Manager - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto p-6 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-blue-600">CashFlow Manager</h1>
+            <nav class="space-x-4">
+                <a href="/homepage.html" class="text-blue-500 hover:underline">Home</a>
+                <a href="/dashboard.html" class="text-blue-700 font-bold hover:underline">Dashboard</a>
+                <a href="/create_category.html" class="text-blue-500 hover:underline">Create Category</a>
+                <a href="/create_subcategory.html" class="text-blue-500 hover:underline">Create Subcategory</a>
+                <a href="/create_type.html" class="text-blue-500 hover:underline">Create Type</a>
+                <a href="/create_status.html" class="text-blue-500 hover:underline">Create Status</a>
+                <a href="/stats.html" class="text-blue-500 hover:underline">See Statistics</a>
+                <button id="logout-btn" class="text-red-500 hover:underline">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-6 flex-grow">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold">Dashboard</h1>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 class="text-2xl font-bold mb-4">Create Cash Flow Record</h2>
+            <form id="create-cashflow-form" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700">Date</label>
+                    <input type="date" id="date" class="w-full p-2 border border-gray-300 rounded">
+                </div>
+                <div>
+                    <label class="block text-gray-700">Type</label>
+                    <select id="type" class="w-full p-2 border border-gray-300 rounded" required>
+                        <option value="" disabled selected>Select Type</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Category</label>
+                    <select id="category" class="w-full p-2 border border-gray-300 rounded" required>
+                        <option value="" disabled selected>Select Category</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Subcategory</label>
+                    <select id="subcategory" class="w-full p-2 border border-gray-300 rounded" required>
+                        <option value="" disabled selected>Select Subcategory</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Status</label>
+                    <select id="status" class="w-full p-2 border border-gray-300 rounded" required>
+                        <option value="" disabled selected>Select Status</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Amount</label>
+                    <input type="number" id="amount" class="w-full p-2 border border-gray-300 rounded" required min="0" step="0.01">
+                </div>
+                <div>
+                    <label class="block text-gray-700">Comment</label>
+                    <textarea id="comment" class="w-full p-2 border border-gray-300 rounded"></textarea>
+                </div>
+                <button type="submit" id="submit-btn" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-blue-300">Create Record</button>
+            </form>
+            <div id="form-error" class="text-red-500 mt-4 text-center hidden transition-opacity duration-300"></div>
+            <div id="form-success" class="text-green-500 mt-4 text-center hidden transition-opacity duration-300"></div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold mb-4">Cash Flow Records</h2>
+            <div id="cashflow-list" class="overflow-x-auto">
+                <table class="min-w-full bg-white">
+                    <thead>
+                        <tr>
+                            <th class="py-2 px-4 border-b text-left">Date</th>
+                            <th class="py-2 px-4 border-b text-left">Type</th>
+                            <th class="py-2 px-4 border-b text-left">Category</th>
+                            <th class="py-2 px-4 border-b text-left">Subcategory</th>
+                            <th class="py-2 px-4 border-b text-left">Status</th>
+                            <th class="py-2 px-4 border-b text-left">Amount</th>
+                            <th class="py-2 px-4 border-b text-left">Comment</th>
+                            <th class="py-2 px-4 border-b text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cashflow-table-body">
+                        <!-- Rekordlar bu yerga dinamik qo'shiladi -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto text-center">
+            <p>© 2025 CashFlow Manager. All rights reserved.</p>
+            <p class="mt-2">Contact: <a href="mailto:support@cashflowmanager.com" class="underline">support@cashflowmanager.com</a></p>
+        </div>
+    </footer>
+
+    <script src="./script.js"></script>
+</body>
+</html>

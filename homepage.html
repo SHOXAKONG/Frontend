@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CashFlow Manager - Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto p-6 flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-blue-600">CashFlow Manager</h1>
+            <nav class="space-x-4">
+                <a href="/homepage.html" class="text-blue-500 hover:underline">Home</a>
+                <a id="dashboard-link" href="/dashboard.html" class="text-blue-500 hover:underline hidden">Dashboard</a>
+                <a id="login-link" href="/login.html" class="text-blue-500 hover:underline">Login</a>
+                <a id="register-link" href="/register.html" class="text-blue-500 hover:underline">Register</a>
+                <button id="logout-btn" class="text-red-500 hover:underline hidden">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-6 flex-grow">
+        <section class="text-center py-12">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Welcome to CashFlow Manager</h2>
+            <p class="text-lg text-gray-600 mb-8">Easily manage your financial transactions, track income and expenses, and stay in control of your cash flow.</p>
+            <div class="space-x-4">
+                <a id="action-btn" href="/dashboard.html" class="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600">Go to Dashboard</a>
+                <a id="login-btn" href="/login.html" class="inline-block bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 hidden">Login</a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-12">
+            <h3 class="text-2xl font-bold text-gray-800 text-center mb-8">Why Choose CashFlow Manager?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="text-xl font-semibold text-gray-800 mb-2">Track Transactions</h4>
+                    <p class="text-gray-600">Record and categorize your income and expenses with ease.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="text-xl font-semibold text-gray-800 mb-2">Custom Categories</h4>
+                    <p class="text-gray-600">Create custom types, categories, and subcategories to suit your needs.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="text-xl font-semibold text-gray-800 mb-2">Secure & Private</h4>
+                    <p class="text-gray-600">Your data is protected with secure authentication and user-specific access.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 CashFlow Manager. All rights reserved.</p>
+            <p class="mt-2">Contact: <a href="mailto:support@cashflowmanager.com" class="underline">support@cashflowmanager.com</a></p>
+        </div>
+    </footer>
+
+    <script>
+        const API_BASE_URL = 'http://127.0.0.1:8000/';
+        let accessToken = localStorage.getItem('access');
+        const refreshToken = localStorage.getItem('refresh');
+
+        // Token yangilash funksiyasi
+        async function refreshAccessToken() {
+            if (!refreshToken) {
+                console.error('No refresh token available');
+                return false;
+            }
+            try {
+                const response = await fetch(`${API_BASE_URL}token/refresh/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ refresh: refreshToken })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    accessToken = data.access;
+                    localStorage.setItem('access', accessToken);
+                    return true;
+                } else {
+                    console.error('Refresh token error:', data);
+                    localStorage.removeItem('access');
+                    localStorage.removeItem('refresh');
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error refreshing token:', error);
+                localStorage.removeItem('access');
+                localStorage.removeItem('refresh');
+                return false;
+            }
+        }
+
+        // Tokenni tekshirish
+        async function checkAuthStatus() {
+            const dashboardLink = document.getElementById('dashboard-link');
+            const loginLink = document.getElementById('login-link');
+            const registerLink = document.getElementById('register-link');
+            const logoutBtn = document.getElementById('logout-btn');
+            const actionBtn = document.getElementById('action-btn');
+            const loginBtn = document.getElementById('login-btn');
+
+            if (accessToken && refreshToken) {
+                // Token mavjud, lekin uni yangilashga urinamiz
+                const isTokenValid = await refreshAccessToken();
+                if (isTokenValid) {
+                    console.log('User is authenticated');
+                    dashboardLink.classList.remove('hidden');
+                    loginLink.classList.add('hidden');
+                    registerLink.classList.add('hidden');
+                    logoutBtn.classList.remove('hidden');
+                    actionBtn.textContent = 'Go to Dashboard';
+                    actionBtn.href = '/dashboard.html';
+                    loginBtn.classList.add('hidden');
+                } else {
+                    console.log('Token invalid, showing login options');
+                    dashboardLink.classList.add('hidden');
+                    loginLink.classList.remove('hidden');
+                    registerLink.classList.remove('hidden');
+                    logoutBtn.classList.add('hidden');
+                    actionBtn.classList.add('hidden');
+                    loginBtn.classList.remove('hidden');
+                }
+            } else {
+                console.log('No tokens found, showing login options');
+                dashboardLink.classList.add('hidden');
+                loginLink.classList.remove('hidden');
+                registerLink.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
+                actionBtn.classList.add('hidden');
+                loginBtn.classList.remove('hidden');
+            }
+        }
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            localStorage.removeItem('access');
+            localStorage.removeItem('refresh');
+            window.location.href = '/homepage.html';
+        });
+
+        // Sahifa yuklanganda
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuthStatus();
+        });
+    </script>
+</body>
+</html>

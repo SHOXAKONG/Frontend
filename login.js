@@ -7,7 +7,6 @@ loginForm.addEventListener('submit', async (e) => {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
 
-    // Validatsiya
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         errorMessage.textContent = 'Please enter a valid email address.';
@@ -24,11 +23,10 @@ loginForm.addEventListener('submit', async (e) => {
     submitBtn.textContent = 'Logging in...';
 
     try {
-        const response = await fetch('http://127.0.0.1:8000/auth/login/', {
+        const response = await fetch('https://python3linux.pythonanywhere.com/auth/login/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                // Agar CSRF kerak bo'lsa: 'X-CSRFToken': getCookie('csrftoken')
             },
             body: JSON.stringify({ email, password }),
         });
@@ -52,7 +50,6 @@ loginForm.addEventListener('submit', async (e) => {
     }
 });
 
-// CSRF token olish (agar kerak bo'lsa)
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

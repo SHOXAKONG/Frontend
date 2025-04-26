@@ -1,16 +1,14 @@
-const API_BASE_URL = 'http://127.0.0.1:8000/';
+const API_BASE_URL = 'https://python3linux.pythonanywhere.com/';
 let accessToken = localStorage.getItem('access');
 const refreshToken = localStorage.getItem('refresh');
 let isEditing = false;
 let currentCashflowId = null;
 
-// Autentifikatsiya tekshiruvi
 if (!accessToken || !refreshToken) {
     console.error('No access or refresh token found, redirecting to login');
     window.location.href = '/login.html';
 }
 
-// Token yangilash funksiyasi
 async function refreshAccessToken() {
     if (!refreshToken) {
         console.error('No refresh token available');
@@ -44,7 +42,6 @@ async function refreshAccessToken() {
     }
 }
 
-// API so'rov funksiyasi
 async function apiRequest(url, options = {}) {
     options.headers = {
         ...options.headers,
@@ -70,7 +67,6 @@ async function apiRequest(url, options = {}) {
     }
 }
 
-// Dropdown'larni to'ldirish
 async function populateTypeDropdown() {
     const formError = document.getElementById('form-error');
     try {
@@ -173,7 +169,6 @@ async function populateStatusDropdown() {
     }
 }
 
-// Dropdown bog'liqliklari
 document.getElementById('type').addEventListener('change', (e) => {
     const typeId = e.target.value;
     populateCategoryDropdown(typeId);
@@ -188,13 +183,11 @@ document.getElementById('category').addEventListener('change', (e) => {
     document.getElementById('subcategory').value = '';
 });
 
-// Bugungi sanani formatlash (YYYY-MM-DD)
 function getTodayDate() {
     const today = new Date();
     return today.toISOString().split('T')[0];
 }
 
-// CashFlow rekordlarini olish
 async function fetchCashFlows() {
     const cashflowTableBody = document.getElementById('cashflow-table-body');
     const formError = document.getElementById('form-error');
@@ -256,7 +249,6 @@ async function fetchCashFlows() {
     }
 }
 
-// CashFlow rekordini o'chirish
 async function deleteCashFlow(id) {
     if (!confirm('Are you sure you want to delete this cash flow record?')) return;
     const formError = document.getElementById('form-error');
@@ -279,7 +271,6 @@ async function deleteCashFlow(id) {
     }
 }
 
-// CashFlow rekordini tahrirlash
 async function editCashFlow(id, date, typeId, categoryId, subcategoryId, statusId, amount, comment) {
     if (!id || isNaN(id)) {
         console.error('Invalid CashFlow ID:', id);
@@ -306,7 +297,6 @@ async function editCashFlow(id, date, typeId, categoryId, subcategoryId, statusI
     document.getElementById('form-error').classList.add('hidden');
 }
 
-// Forma yuborish (yaratish yoki yangilash)
 let isSubmitting = false;
 document.getElementById('create-cashflow-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -324,7 +314,6 @@ document.getElementById('create-cashflow-form').addEventListener('submit', async
     const amount = parseFloat(document.getElementById('amount').value);
     const comment = document.getElementById('comment').value;
 
-    // So‘rov body’sini tayyorlash
     const requestBody = {
         type_id: parseInt(typeId),
         category_id: parseInt(categoryId),
@@ -334,7 +323,7 @@ document.getElementById('create-cashflow-form').addEventListener('submit', async
         comment
     };
     if (date) {
-        requestBody.date = date; // Faqat date bo‘lsa qo‘shiladi
+        requestBody.date = date; 
     }
 
     console.log('Current CashFlow ID:', currentCashflowId);
@@ -347,7 +336,6 @@ document.getElementById('create-cashflow-form').addEventListener('submit', async
     console.log('Comment:', comment);
     console.log('Request Body:', JSON.stringify(requestBody));
 
-    // Validatsiya
     if (!typeId || !categoryId || !subcategoryId || !statusId || isNaN(amount) ||
         isNaN(parseInt(typeId)) || isNaN(parseInt(categoryId)) || isNaN(parseInt(subcategoryId)) || isNaN(parseInt(statusId))) {
         formError.textContent = 'Please fill all required fields correctly.';
@@ -419,14 +407,12 @@ document.getElementById('create-cashflow-form').addEventListener('submit', async
     }
 });
 
-// Logout
 document.getElementById('logout-btn').addEventListener('click', () => {
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
     window.location.href = '/login.html';
 });
 
-// Sahifa yuklanganda
 document.addEventListener('DOMContentLoaded', () => {
     populateTypeDropdown();
     populateCategoryDropdown();

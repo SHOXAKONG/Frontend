@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
-    <!-- Header -->
+
     <header class="bg-white shadow-md">
         <div class="container mx-auto p-6 flex justify-between items-center">
             <h1 class="text-3xl font-bold text-blue-600">CashFlow Manager</h1>
@@ -24,7 +24,6 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="container mx-auto p-6 flex-grow">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold">Create New Type</h1>
@@ -54,14 +53,12 @@
                         </tr>
                     </thead>
                     <tbody id="types-table-body">
-                        <!-- Type’lar bu yerga dinamik qo‘shiladi -->
                     </tbody>
                 </table>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
     <footer class="bg-gray-800 text-white py-6">
         <div class="container mx-auto text-center">
             <p>© 2025 CashFlow Manager. All rights reserved.</p>
@@ -70,19 +67,17 @@
     </footer>
 
     <script>
-        const API_BASE_URL = 'http://127.0.0.1:8000/';
+        const API_BASE_URL = 'https://python3linux.pythonanywhere.com/';
         let accessToken = localStorage.getItem('access');
         const refreshToken = localStorage.getItem('refresh');
         let isEditing = false;
         let currentTypeId = null;
 
-        // Autentifikatsiya tekshiruvi
         if (!accessToken || !refreshToken) {
             console.error('No access or refresh token found, redirecting to login');
             window.location.href = '/login.html';
         }
 
-        // Token yangilash funksiyasi
         async function refreshAccessToken() {
             if (!refreshToken) {
                 console.error('No refresh token available');
@@ -116,7 +111,6 @@
             }
         }
 
-        // API so‘rov funksiyasi
         async function apiRequest(url, options = {}) {
             options.headers = {
                 ...options.headers,
@@ -142,7 +136,6 @@
             }
         }
 
-        // Type nomining noyobligini tekshirish
         async function checkTypeNameExists(name) {
             try {
                 const response = await apiRequest(`${API_BASE_URL}category/types/?name=${encodeURIComponent(name)}`);
@@ -155,7 +148,6 @@
             }
         }
 
-        // Type’lar ro‘yxatini olish va ko‘rsatish
         async function fetchTypes() {
             const typesTableBody = document.getElementById('types-table-body');
             const formError = document.getElementById('form-error');
@@ -190,7 +182,6 @@
             }
         }
 
-        // Type o‘chirish
         async function deleteType(id) {
             if (!confirm('Are you sure you want to delete this type?')) return;
             const formError = document.getElementById('form-error');
@@ -213,7 +204,6 @@
             }
         }
 
-        // Type tahrirlash
         function editType(id, name) {
             isEditing = true;
             currentTypeId = id;
@@ -223,7 +213,6 @@
             document.getElementById('form-error').classList.add('hidden');
         }
 
-        // Forma yuborish (yaratish yoki yangilash)
         let isSubmitting = false;
         document.getElementById('create-type-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -247,7 +236,6 @@
                 return;
             }
 
-            // Noyob nomni tekshirish (tahrirlashda o‘zini hisobga olmaslik)
             if (!isEditing) {
                 const nameExists = await checkTypeNameExists(name);
                 if (nameExists) {
@@ -301,14 +289,12 @@
             }
         });
 
-        // Logout
         document.getElementById('logout-btn').addEventListener('click', () => {
             localStorage.removeItem('access');
             localStorage.removeItem('refresh');
             window.location.href = '/login.html';
         });
 
-        // Sahifa yuklanganda
         document.addEventListener('DOMContentLoaded', () => {
             fetchTypes();
         });

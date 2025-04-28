@@ -12,6 +12,7 @@ registerForm.addEventListener('submit', async (e) => {
     const firstName = document.getElementById('first-name').value.trim();
     const lastName = document.getElementById('last-name').value.trim();
 
+    // Validatsiya
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         errorMessage.textContent = 'Please enter a valid email address.';
@@ -42,10 +43,11 @@ registerForm.addEventListener('submit', async (e) => {
     submitBtn.textContent = 'Registering...';
 
     try {
-        const response = await fetch('https://python3linux.pythonanywhere.com/auth/register/', {
+        const response = await fetch('http://127.0.0.1:8000/auth/register/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                // Agar CSRF kerak bo'lsa: 'X-CSRFToken': getCookie('csrftoken')
             },
             body: JSON.stringify({
                 email,
@@ -82,6 +84,7 @@ registerForm.addEventListener('submit', async (e) => {
     }
 });
 
+// Parol ko'rsatish/yashirish
 document.getElementById('toggle-password').addEventListener('click', () => {
     const passwordInput = document.getElementById('password');
     const toggleBtn = document.getElementById('toggle-password');
@@ -106,6 +109,7 @@ document.getElementById('toggle-confirm-password').addEventListener('click', () 
     }
 });
 
+// CSRF token olish (agar kerak bo'lsa)
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
-    
+    <!-- Header -->
     <header class="bg-white shadow-md">
         <div class="container mx-auto p-6 flex justify-between items-center">
             <h1 class="text-3xl font-bold text-blue-600">CashFlow Manager</h1>
@@ -21,6 +21,7 @@
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="container mx-auto p-6 flex-grow">
         <section class="text-center py-12">
             <h2 class="text-4xl font-bold text-gray-800 mb-4">Welcome to CashFlow Manager</h2>
@@ -31,6 +32,7 @@
             </div>
         </section>
 
+        <!-- Features Section -->
         <section class="py-12">
             <h3 class="text-2xl font-bold text-gray-800 text-center mb-8">Why Choose CashFlow Manager?</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -50,6 +52,7 @@
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="bg-gray-800 text-white py-6">
         <div class="container mx-auto text-center">
             <p>&copy; 2025 CashFlow Manager. All rights reserved.</p>
@@ -58,10 +61,11 @@
     </footer>
 
     <script>
-        const API_BASE_URL = 'https://python3linux.pythonanywhere.com/';
+        const API_BASE_URL = 'http://127.0.0.1:8000/';
         let accessToken = localStorage.getItem('access');
         const refreshToken = localStorage.getItem('refresh');
 
+        // Token yangilash funksiyasi
         async function refreshAccessToken() {
             if (!refreshToken) {
                 console.error('No refresh token available');
@@ -92,6 +96,7 @@
             }
         }
 
+        // Tokenni tekshirish
         async function checkAuthStatus() {
             const dashboardLink = document.getElementById('dashboard-link');
             const loginLink = document.getElementById('login-link');
@@ -101,6 +106,7 @@
             const loginBtn = document.getElementById('login-btn');
 
             if (accessToken && refreshToken) {
+                // Token mavjud, lekin uni yangilashga urinamiz
                 const isTokenValid = await refreshAccessToken();
                 if (isTokenValid) {
                     console.log('User is authenticated');
@@ -131,12 +137,14 @@
             }
         }
 
+        // Logout
         document.getElementById('logout-btn').addEventListener('click', () => {
             localStorage.removeItem('access');
             localStorage.removeItem('refresh');
             window.location.href = '/index.html';
         });
 
+        // Sahifa yuklanganda
         document.addEventListener('DOMContentLoaded', () => {
             checkAuthStatus();
         });

@@ -1,14 +1,16 @@
-const API_BASE_URL = 'https://python3linux.pythonanywhere.com/';
+const API_BASE_URL = 'http://127.0.0.1:8000/';
 let accessToken = localStorage.getItem('access');
 const refreshToken = localStorage.getItem('refresh');
 let isEditing = false;
 let currentStatusId = null;
 
+// Autentifikatsiya tekshiruvi
 if (!accessToken || !refreshToken) {
     console.error('No access or refresh token found, redirecting to login');
     window.location.href = '/login.html';
 }
 
+// Token yangilash funksiyasi
 async function refreshAccessToken() {
     if (!refreshToken) {
         console.error('No refresh token available');
@@ -42,6 +44,7 @@ async function refreshAccessToken() {
     }
 }
 
+// API so'rov funksiyasi
 async function apiRequest(url, options = {}) {
     options.headers = {
         ...options.headers,
@@ -67,6 +70,7 @@ async function apiRequest(url, options = {}) {
     }
 }
 
+// Statuslarni olish va ro'yxatni yangilash
 async function fetchStatuses() {
     const statusesTableBody = document.getElementById('statuses-table-body');
     const formError = document.getElementById('form-error');
@@ -98,6 +102,7 @@ async function fetchStatuses() {
     }
 }
 
+// Statusni o'chirish
 async function deleteStatus(id) {
     if (!confirm('Are you sure you want to delete this status?')) return;
     const formError = document.getElementById('form-error');
@@ -120,6 +125,7 @@ async function deleteStatus(id) {
     }
 }
 
+// Statusni tahrirlash
 function editStatus(id, name) {
     isEditing = true;
     currentStatusId = id;
@@ -129,6 +135,7 @@ function editStatus(id, name) {
     document.getElementById('form-error').classList.add('hidden');
 }
 
+// Forma yuborish (yaratish yoki yangilash)
 document.getElementById('create-status-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formError = document.getElementById('form-error');
@@ -185,6 +192,7 @@ document.getElementById('create-status-form').addEventListener('submit', async (
     }
 });
 
+// Sahifa yuklanganda
 document.addEventListener('DOMContentLoaded', () => {
     fetchStatuses();
 });

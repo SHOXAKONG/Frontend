@@ -1,14 +1,16 @@
-const API_BASE_URL = 'https://python3linux.pythonanywhere.com/';
+const API_BASE_URL = 'http://127.0.0.1:8000/';
 let accessToken = localStorage.getItem('access');
 const refreshToken = localStorage.getItem('refresh');
 let isEditing = false;
 let currentSubcategoryId = null;
 
+// Autentifikatsiya tekshiruvi
 if (!accessToken || !refreshToken) {
     console.error('No access or refresh token found, redirecting to login');
     window.location.href = '/login.html';
 }
 
+// Token yangilash funksiyasi
 async function refreshAccessToken() {
     if (!refreshToken) {
         console.error('No refresh token available');
@@ -42,6 +44,7 @@ async function refreshAccessToken() {
     }
 }
 
+// API so'rov funksiyasi
 async function apiRequest(url, options = {}) {
     options.headers = {
         ...options.headers,
@@ -67,6 +70,7 @@ async function apiRequest(url, options = {}) {
     }
 }
 
+// Kategoriyalarni dropdown'ga yuklash
 async function populateCategoryDropdown() {
     const formError = document.getElementById('form-error');
     try {
@@ -92,6 +96,7 @@ async function populateCategoryDropdown() {
     }
 }
 
+// Subkategoriyalarni olish va ro'yxatni yangilash
 async function fetchSubcategories() {
     const subcategoriesTableBody = document.getElementById('subcategories-table-body');
     const formError = document.getElementById('form-error');
@@ -124,6 +129,7 @@ async function fetchSubcategories() {
     }
 }
 
+// Subkategoriyani o'chirish
 async function deleteSubcategory(id) {
     if (!confirm('Are you sure you want to delete this subcategory?')) return;
     const formError = document.getElementById('form-error');
@@ -146,6 +152,7 @@ async function deleteSubcategory(id) {
     }
 }
 
+// Subkategoriyani tahrirlash
 function editSubcategory(id, name, categoryId) {
     isEditing = true;
     currentSubcategoryId = id;
@@ -156,6 +163,7 @@ function editSubcategory(id, name, categoryId) {
     document.getElementById('form-error').classList.add('hidden');
 }
 
+// Forma yuborish (yaratish yoki yangilash)
 document.getElementById('create-subcategory-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formError = document.getElementById('form-error');
@@ -219,6 +227,7 @@ document.getElementById('create-subcategory-form').addEventListener('submit', as
     }
 });
 
+// Sahifa yuklanganda
 document.addEventListener('DOMContentLoaded', () => {
     populateCategoryDropdown();
     fetchSubcategories();

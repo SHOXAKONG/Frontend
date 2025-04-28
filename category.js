@@ -1,13 +1,16 @@
-const API_BASE_URL = 'https://python3linux.pythonanywhere.com/';
+const API_BASE_URL = 'http://127.0.0.1:8000/';
 let accessToken = localStorage.getItem('access');
 const refreshToken = localStorage.getItem('refresh');
 let isEditing = false;
 let currentCategoryId = null;
+
+// Autentifikatsiya tekshiruvi
 if (!accessToken || !refreshToken) {
     console.error('No access or refresh token found, redirecting to login');
     window.location.href = '/login.html';
 }
 
+// Token yangilash funksiyasi
 async function refreshAccessToken() {
     if (!refreshToken) {
         console.error('No refresh token available');
@@ -41,6 +44,7 @@ async function refreshAccessToken() {
     }
 }
 
+// API so'rov funksiyasi
 async function apiRequest(url, options = {}) {
     options.headers = {
         ...options.headers,
@@ -66,6 +70,7 @@ async function apiRequest(url, options = {}) {
     }
 }
 
+// Turlarni dropdown'ga yuklash
 async function populateTypeDropdown() {
     const formError = document.getElementById('form-error');
     try {
@@ -90,6 +95,8 @@ async function populateTypeDropdown() {
         setTimeout(() => formError.classList.add('hidden'), 3000);
     }
 }
+
+// Kategoriyalarni olish va ro'yxatni yangilash
 async function fetchCategories() {
     const categoriesTableBody = document.getElementById('categories-table-body');
     const formError = document.getElementById('form-error');
@@ -121,6 +128,8 @@ async function fetchCategories() {
         setTimeout(() => formError.classList.add('hidden'), 3000);
     }
 }
+
+// Kategoriyani o'chirish
 async function deleteCategory(id) {
     if (!confirm('Are you sure you want to delete this category?')) return;
     const formError = document.getElementById('form-error');
@@ -143,6 +152,7 @@ async function deleteCategory(id) {
     }
 }
 
+// Kategoriyani tahrirlash
 function editCategory(id, name, typeId) {
     isEditing = true;
     currentCategoryId = id;
@@ -153,6 +163,7 @@ function editCategory(id, name, typeId) {
     document.getElementById('form-error').classList.add('hidden');
 }
 
+// Forma yuborish (yaratish yoki yangilash)
 document.getElementById('create-category-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formError = document.getElementById('form-error');
@@ -216,6 +227,7 @@ document.getElementById('create-category-form').addEventListener('submit', async
     }
 });
 
+// Sahifa yuklanganda
 document.addEventListener('DOMContentLoaded', () => {
     populateTypeDropdown();
     fetchCategories();

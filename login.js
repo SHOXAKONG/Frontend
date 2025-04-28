@@ -24,7 +24,7 @@ loginForm.addEventListener('submit', async (e) => {
     submitBtn.textContent = 'Logging in...';
 
     try {
-        const response = await fetch('http://127.0.0.1:8000/auth/login/', {
+        const response = await fetch('https://python3linux.pythonanywhere.com/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
